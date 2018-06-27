@@ -46,6 +46,16 @@ public class GraphEdge implements Edge<GraphVertex> {
     }
 
     public String toString() {
-        return "Edge ["+source+" , "+destination+"]";
+        return "Edge ["+source+" -> "+destination+"]";
     }
+
+//    public boolean equals(GraphEdge edge){
+//        GraphVertex v1 = getDestinationVertex();
+//        GraphVertex v2 = getSourceVertex();
+//        GraphVertex w1 = edge.getDestinationVertex();
+//        GraphVertex w2 = edge.getDestinationVertex();
+//
+//        return v1 == w1 && v2 == w2 || c
+//
+//    }
 }

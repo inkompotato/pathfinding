@@ -5,10 +5,13 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
     private HashSet<GraphEdge>edgeSet;
     private ArrayList<LinkedList<Adjacency>> adjList;
 
-    WeightedGraph(){
+    WeightedGraph(int vertices){
         vertexSet = new HashSet<>();
         edgeSet = new HashSet<>();
         adjList = new ArrayList<>();
+        for (int i = 0; i < vertices; i++) {
+            adjList.add(i, new LinkedList<>());
+        }
     }
     @Override
     public void addEdge(GraphVertex sourceVertex, GraphVertex targetVertex, int weight) {
@@ -17,27 +20,17 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
     }
 
     @Override
-    public void addEdge(GraphEdge edge) {
-        GraphEdge e = edge;
+    public void addEdge(GraphEdge e) {
         Adjacency a = new Adjacency(e.getDestinationVertex(), e.getWeight());
+        Adjacency b = new Adjacency(e.getSourceVertex(), e.getWeight());
         int key = e.getSourceVertex().getKey();
-        //System.out.println(key);
-        //there are no adjacent vertices for this vertex yet
-        try{
-            adjList.get(key);
-        } catch(IndexOutOfBoundsException ex){
-            //System.out.println("hi");
-            LinkedList<Adjacency> l = new LinkedList<>();
-            l.addFirst(a);
-            adjList.add(key, l);
-            return;
-        }
-        //add the adjacency to an existing vertex
-            LinkedList<Adjacency> l = adjList.get(key);
-            l.add(a);
-        //add to edge set
-            edgeSet.add(e);
+        int key2 = e.getDestinationVertex().getKey();
+            
+            adjList.get(key).add(a);
+            adjList.get(key2).add(b);
 
+            //add edge to edge set
+            edgeHandler(e, true);
     }
 
 /*    @Override
@@ -54,8 +47,34 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
              ) {
             if(a.equals(adj)) {
                 l.remove(a);
-                edgeSet.remove(edge);
+                edgeHandler(edge, false);
             }
+        }
+    }
+
+    private void edgeHandler(GraphEdge edge, boolean keep) {
+        GraphVertex v = edge.getSourceVertex();
+        GraphVertex w = edge.getDestinationVertex();
+        if (!keep) {
+            edgeSet.remove(edge);
+
+            v.removeEdge(edge);
+            w.removeEdge(edge);
+            if (edge.getSourceVertex().getEdges().isEmpty()) {
+                vertexSet.remove(edge.getSourceVertex());
+            }
+            if (edge.getDestinationVertex().getEdges().isEmpty()) {
+                vertexSet.remove(edge.getDestinationVertex());
+            }
+        } else {
+            //add edge to edge set
+            edgeSet.add(edge);
+            //add edges to the vertices
+            v.addEdge(edge);
+            w.addEdge(edge);
+            //add vertices to the vertex set
+            vertexSet.add(v);
+            vertexSet.add(w);
         }
     }
 
@@ -98,16 +117,16 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
         int steps = step;
         if (sourceKey == destinationKey) return steps;
         else {
-            LinkedList<Adjacency> l = adjList.get(sourceKey)
+            LinkedList<Adjacency> l = adjList.get(sourceKey);
             for (Adjacency a : l
                  ) {
                 
             }
         }
-
+        return steps;
     }
     
-    public int findCheapestPath(GraphVertex v, GraphVertex v){
+    public int findCheapestPath(GraphVertex v, GraphVertex w){
         int cost = 0;
         
         return cost;
@@ -115,11 +134,12 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
 
     public String toString(){
         StringBuilder s = new StringBuilder();
-        for (LinkedList<Adjacency> l: adjList
+        for (LinkedList<Adjacency> li: adjList
              ) {
-            s.append(adjList.indexOf(l));
-            for (Adjacency e : l) {
-                s.append(e.toString()).append(" ");
+            s.append(adjList.indexOf(li));
+            for (Adjacency e : li) {
+                s.append(e.toString());
+                s.append(" ");
             }
             s.append("\n");
         }
