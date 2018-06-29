@@ -38,15 +38,44 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
 
     }*/
 
+
+    //doesnt really work, dont know why
+   /* public GraphVertex[] getVertexArray(){
+        Object[] a;
+        a = vertexSet.toArray();
+
+        //probably not really necessary
+        GraphVertex[] gva = new GraphVertex[a.length];
+        int i = 0;
+        for(Object o : a){
+            gva[i] = (GraphVertex) a[i];
+        }
+        return gva;
+    }*/
+
+    int edgeCount(){
+        return edgeSet.size();
+    }
+
     @Override
     public void removeEdge(GraphEdge edge) {
-        int key =edge.getSourceVertex().getKey();
-        Adjacency adj = new Adjacency(edge.getDestinationVertex(), edge.getWeight());
-        LinkedList<Adjacency> l = adjList.get(key);
-        for (Adjacency a : l
+        int key1 = edge.getSourceVertex().getKey();
+        int key2 = edge.getDestinationVertex().getKey();
+        Adjacency adj1 = new Adjacency(edge.getDestinationVertex(), edge.getWeight());
+        Adjacency adj2 = new Adjacency(edge.getSourceVertex(), edge.getWeight());
+        LinkedList<Adjacency> li1 = adjList.get(key1);
+        for (Adjacency a : li1
              ) {
-            if(a.equals(adj)) {
-                l.remove(a);
+            if(a.equals(adj1)) {
+                li1.remove(a);
+                edgeHandler(edge, false);
+            }
+        }
+        LinkedList<Adjacency> li2 = adjList.get(key2);
+        for (Adjacency a : li2
+                ) {
+            if(a.equals(adj2)) {
+                li2.remove(a);
                 edgeHandler(edge, false);
             }
         }

@@ -1,7 +1,7 @@
 public class TestGraph {
 
     public static void main (String[] args){
-        WeightedGraph g = new WeightedGraph(4);
+       /* WeightedGraph g = new WeightedGraph(4);
         GraphVertex v0 = new GraphVertex(0);
         GraphVertex v1 = new GraphVertex(1, "Vertex 1");
         GraphVertex v2 = new GraphVertex(2, "Vertex 2");
@@ -24,7 +24,7 @@ public class TestGraph {
        g.addEdge(e23);
        g.addEdge(e20);
 
-        System.out.println(g);
+        System.out.println(g);*/
 
         //System.out.println(g.containsEdge(e21)+"\n");
 
@@ -32,5 +32,11 @@ public class TestGraph {
 
         //System.out.println(g);
         //System.out.println(g.containsEdge(e12)+"\n");
+
+        RandomWeightedGraph rg = new RandomWeightedGraph();
+        rg.generateGraph(20,40);
+
+        System.out.println(rg);
+
     }
 }
