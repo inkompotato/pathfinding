@@ -3,7 +3,7 @@ import java.util.HashSet;
 public class TestGraph {
 
     public static void main (String[] args){
-        WeightedGraph g = new WeightedGraph(5);
+       /* WeightedGraph g = new WeightedGraph(5);
         GraphVertex v0 = new GraphVertex(0);
         GraphVertex v1 = new GraphVertex(1, "Vertex 1");
         GraphVertex v2 = new GraphVertex(2, "Vertex 2");
@@ -29,7 +29,7 @@ public class TestGraph {
        g.addEdge(e23);
        g.addEdge(e20);
        g.addEdge(e34);
-       g.addEdge(e03);
+       g.addEdge(e03);*/
 
         //System.out.println(g);
         //System.out.println(g.findShortestPath(v0, v4));
@@ -42,7 +42,7 @@ public class TestGraph {
         //System.out.println(g.containsEdge(e12)+"\n");
 
         RandomWeightedGraph rg = new RandomWeightedGraph();
-        rg.generateGraph(20,40);
+        rg.generateGraph(20,60);
 
         System.out.println(rg);
 

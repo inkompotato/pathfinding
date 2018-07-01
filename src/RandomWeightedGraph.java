@@ -26,7 +26,7 @@ public class RandomWeightedGraph {
 
         while(g.edgeCount() < edges){
             int[] vertPos = twoRandomInt(vertices);
-            int weight = rnd.nextInt(MAXWEIGHT);
+            int weight = rnd.nextInt(MAXWEIGHT)+1;
 
             /*choose two random vertices in the array and create an edge for them with a random weight
             doesn't avoid duplicates edges yet, duplicates probably have a different weight so it's not
