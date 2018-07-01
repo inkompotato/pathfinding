@@ -14,7 +14,7 @@ public class RandomWeightedGraph {
      * generate randomly chosen edges between the vertices
      * given them a random weight as well
      * */
-    public Graph generateGraph(int vertices, int edges){
+    public WeightedGraph generateGraph(int vertices, int edges){
         vertArray = new GraphVertex[vertices];
         g = new WeightedGraph(vertices);
 
@@ -40,7 +40,7 @@ public class RandomWeightedGraph {
     /*
     *  take a graph and print out the shortest path in readable format
     */
-    public void printShortestPath(Graph g){
+    public String printPathOperations(){
         //generate two random vertices as the input for the shortest path algorithm
         int[] vertPos = twoRandomInt(vertArray.length);
         //use the values to access two vertices
@@ -48,7 +48,7 @@ public class RandomWeightedGraph {
         GraphVertex b = vertArray[vertPos[1]];
 
         //use shortestPath method from WeightedGraph class to get the shortest graph
-
+        return g.findShortestPath(a,b)+"\n"+g.findCheapestPath(a,b);
         //print out nicely
     }
 

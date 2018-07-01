@@ -1,4 +1,6 @@
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
 
 public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
     private HashSet<GraphVertex>vertexSet;
@@ -134,31 +136,81 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
         return edgeSet;
     }
     
-    public int findShortestPath(GraphVertex v, GraphVertex w){
-        int steps = 0;
-        int sourceKey = v.getKey();
-        int destinationKey = w.getKey();
-        if (sourceKey == destinationKey) return steps;
-        return steps;
-    }
-    
-    private int pathfinder(int sourceKey, int destinationKey, int step){
-        int steps = step;
-        if (sourceKey == destinationKey) return steps;
-        else {
-            LinkedList<Adjacency> l = adjList.get(sourceKey);
-            for (Adjacency a : l
-                 ) {
-                
+    public String findShortestPath(GraphVertex v, GraphVertex w){
+        pathfinder2(v,w,v.toString(), new HashSet<>(),0, 0, 1);
+        String outputString ="";
+        int shortest = Integer.MAX_VALUE;
+        for(String[] s : paths){
+            int length = Integer.parseInt(s[1]);
+            if (length<shortest) {
+                outputString = s[0]+" | Length: "+length;
+                shortest = length;
             }
         }
-        return steps;
+        return outputString;
     }
     
-    public int findCheapestPath(GraphVertex v, GraphVertex w){
-        int cost = 0;
-        
-        return cost;
+   /* private String pathfinder(int sourceKey, int destinationKey, int step){
+        LinkedList<Adjacency> q = new LinkedList<>();
+        HashSet<Integer> marked = new HashSet<>();
+        String path =sourceKey+" ";
+        marked.add(sourceKey);
+        int steps = 0;
+        boolean found = false;
+        q.add(new Adjacency(new GraphVertex(sourceKey), 0));
+            while(!q.isEmpty() && !found) {
+                Adjacency adj = q.poll();
+                LinkedList<Adjacency> li = adjList.get(adj.getVertex().getKey());
+                for (Adjacency a : li){
+                    if (!marked.contains(a.getVertex().getKey())){
+                        q.add(a);
+                        marked.add(a.getVertex().getKey());
+                        path += a.getVertex().getKey() +" ";
+                    }
+                    if (a.getVertex().getKey() == destinationKey && !found){
+                        System.out.println(steps);
+                        found = true;
+                    }
+                }
+            }
+
+
+         return path;
+    }*/
+
+    private ArrayList<String[]> paths = new ArrayList<>();
+
+    public void pathfinder2 (GraphVertex source, GraphVertex destination, String path, HashSet<GraphVertex> marked, int step, int cost, int mode){
+        HashSet<GraphVertex> marked2 = (HashSet<GraphVertex>)marked.clone();
+        marked2.add(source);
+        step = step + 1;
+        LinkedList<Adjacency> li = adjList.get(source.getKey());
+        for (Adjacency adj : li){
+                if (adj.getVertex().equals(destination)) {
+                    String info = mode == 1 ? " | Lenght: "+step : " | Cost: "+(cost+adj.getWeight());
+                    String[] strarr = {path+" "+adj.getVertex(), String.valueOf(step), String.valueOf(cost)};
+                    paths.add(strarr);
+                } else if (!marked2.contains(adj.getVertex())){
+                    cost = cost + adj.getWeight();
+                    pathfinder2(adj.getVertex(), destination, path + " " + adj.getVertex(), marked2, step, cost, mode);
+                }
+
+        }
+
+    }
+    
+    public String findCheapestPath(GraphVertex v, GraphVertex w){
+        pathfinder2(v,w,v.toString(), new HashSet<>(),0, 0, 0);
+        String outputString = "";
+        int cost = Integer.MAX_VALUE;
+        for(String[] s : paths){
+            int pathcost = Integer.parseInt(s[2]);
+            if (pathcost<cost){
+                outputString = s[0]+" | Cost: "+pathcost;
+                cost = pathcost;
+            }
+        }
+        return outputString;
     }
 
     public String toString(){
@@ -176,22 +228,22 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
     }
 
     private class Adjacency {
-        Vertex destination;
+        GraphVertex destination;
         int weight;
 
-        Adjacency(Vertex destination, int weight){
+        Adjacency(GraphVertex destination, int weight){
             addDest(destination);
             addWeight(weight);
         }
 
-        void addDest(Vertex destination){
+        void addDest(GraphVertex destination){
             this.destination = destination;
         }
         void addWeight(int weight){
             this.weight = weight;
         }
 
-        Vertex getVertex(){
+        GraphVertex getVertex(){
             return destination;
         }
 
@@ -204,7 +256,11 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
         }
 
         boolean equals(Adjacency adj){
-            return getVertex() == adj.getVertex() && getWeight() == adj.getWeight();
+            int k1 = getVertex().getKey();
+            int k2 = adj.getVertex().getKey();
+            int w1 = getWeight();
+            int w2 = adj.getWeight();
+            return k1 == k2 && w1 == w2;
         }
 
     }

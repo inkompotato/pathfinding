@@ -1,11 +1,14 @@
+import java.util.HashSet;
+
 public class TestGraph {
 
     public static void main (String[] args){
-       /* WeightedGraph g = new WeightedGraph(4);
+        WeightedGraph g = new WeightedGraph(5);
         GraphVertex v0 = new GraphVertex(0);
         GraphVertex v1 = new GraphVertex(1, "Vertex 1");
         GraphVertex v2 = new GraphVertex(2, "Vertex 2");
         GraphVertex v3 = new GraphVertex(3);
+        GraphVertex v4 = new GraphVertex(4);
 
         System.out.println(v1+"\n"+v2+"\n"+v3);
 
@@ -15,6 +18,8 @@ public class TestGraph {
         GraphEdge e13 = new GraphEdge(v1, v3, 7);
         GraphEdge e23 = new GraphEdge(v2, v3, 9);
         GraphEdge e20 = new GraphEdge(v2, v0, 4);
+        GraphEdge e34 = new GraphEdge(v3, v4, 7);
+        GraphEdge e03 = new GraphEdge(v0, v3, 12);
 
         System.out.println(e10+"\n"+e12+"\n"+e13);
 
@@ -23,8 +28,11 @@ public class TestGraph {
        g.addEdge(e10);
        g.addEdge(e23);
        g.addEdge(e20);
+       g.addEdge(e34);
+       g.addEdge(e03);
 
-        System.out.println(g);*/
+        //System.out.println(g);
+        //System.out.println(g.findShortestPath(v0, v4));
 
         //System.out.println(g.containsEdge(e21)+"\n");
 
@@ -37,6 +45,8 @@ public class TestGraph {
         rg.generateGraph(20,40);
 
         System.out.println(rg);
+
+        System.out.println(rg.printPathOperations());
 
     }
 }
