@@ -1,4 +1,3 @@
-import java.util.HashSet;
 import java.util.Random;
 
 
@@ -6,15 +5,15 @@ public class RandomWeightedGraph {
 
     private GraphVertex[] vertArray;
     private WeightedGraph g;
-    private static int MAXWEIGHT = 20;
-    Random rnd = new Random();
+    private static final int MAXWEIGHT = 20;
+    private Random rnd = new Random();
 
     /*
      * take edges and vertices as input
      * generate randomly chosen edges between the vertices
      * given them a random weight as well
      * */
-    public WeightedGraph generateGraph(int vertices, int edges){
+    void generateGraph(int vertices, int edges){
         vertArray = new GraphVertex[vertices];
         g = new WeightedGraph(vertices);
 
@@ -34,13 +33,12 @@ public class RandomWeightedGraph {
             g.addEdge(vertArray[vertPos[0]], vertArray[vertPos[1]], weight);
         }
         /*System.out.println(g);*/
-        return g;
     }
 
     /*
     *  take a graph and print out the shortest path in readable format
     */
-    public String printPathOperations(){
+    String printPathOperations(){
         //generate two random vertices as the input for the shortest path algorithm
         int[] vertPos = twoRandomInt(vertArray.length);
         //use the values to access two vertices
@@ -52,7 +50,11 @@ public class RandomWeightedGraph {
         //print out nicely
     }
 
-    public int[] twoRandomInt(int limit){
+    String printPaths(){
+        return g.getAllPaths();
+    }
+
+    private int[] twoRandomInt(int limit){
         int[] a =new int[2];
         int pos1 = rnd.nextInt(limit);
         int pos2 = rnd.nextInt(limit);

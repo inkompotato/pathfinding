@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 
 public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
     private HashSet<GraphVertex>vertexSet;
     private HashSet<GraphEdge>edgeSet;
     private ArrayList<LinkedList<Adjacency>> adjList;
+    private boolean saved;
 
     WeightedGraph(int vertices){
         vertexSet = new HashSet<>();
@@ -24,16 +24,22 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
 
     @Override
     public void addEdge(GraphEdge e) {
+        boolean taken = false;
         Adjacency a = new Adjacency(e.getDestinationVertex(), e.getWeight());
         Adjacency b = new Adjacency(e.getSourceVertex(), e.getWeight());
         int key = e.getSourceVertex().getKey();
         int key2 = e.getDestinationVertex().getKey();
-            
+
+        for (Adjacency adj :adjList.get(key)) {
+            if(adj.equals(a)|| adj.equals(b)) taken = true;
+        }
+        if (!taken) {
             adjList.get(key).add(a);
             adjList.get(key2).add(b);
-
-            //add edge to edge set
             edgeHandler(e, true);
+        }
+
+
     }
 
 /*    @Override
@@ -122,10 +128,8 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
         return edgeSet;
     }
     
-    public String findShortestPath(GraphVertex v, GraphVertex w){
-        paths.clear();
-        markedV.clear();
-        pathfinder2(v,w,v.toString(), new HashSet<>(),0, 0);
+    String findShortestPath(GraphVertex v, GraphVertex w){
+        runPathfinding(v, w);
         String outputString ="";
         int shortest = Integer.MAX_VALUE;
         for(String[] s : paths){
@@ -137,37 +141,15 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
         }
         return outputString;
     }
-    
-/*    private void pathfinder(GraphVertex sourceVertex, GraphVertex destinationVertex){
-        int src = sourceVertex.getKey();
-        int dest = destinationVertex.getKey();
-        int[] dist = new int[vertexSet.size()]; //output array
-        boolean[] sptSet = new boolean[vertexSet.size()];
 
-        PriorityQueue<GraphVertex> queue = new PriorityQueue<>();
-        queue.add(sourceVertex);
-
-        while(!queue.isEmpty()){
-            GraphVertex u = queue.poll();
-            for (Adjacency a : adjList.get(u.getKey())){
-
-            }
+    private void runPathfinding(GraphVertex v, GraphVertex w) {
+        if (!saved){
+            paths.clear();
+            markedV.clear();
+            pathfinder2(v,w,v.toString(), new HashSet<>(),0, 0);
+            saved = true;
         }
-
-
-
     }
-
-    private int minDistance(int[] dist, boolean[] sptSet){
-        int min = Integer.MAX_VALUE, min_index = -1;
-        for (int v = 0; v<vertexSet.size(); v++){
-            if (sptSet[v] == false && dist[v] <= min){
-                min = dist[v];
-                min_index = v;
-            }
-        }
-        return min_index;
-    }*/
 
     private ArrayList<String[]> paths = new ArrayList<>();
     private HashSet<GraphVertex> markedV = new HashSet<>();
@@ -175,24 +157,20 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
     /**
      * brute force pathfinding method that uses recursion
      */
-    public void pathfinder2 (GraphVertex source, GraphVertex destination, String path, HashSet<GraphVertex> marked, int step, int cost){
-        HashSet<GraphVertex> marked2 = (HashSet<GraphVertex>)marked.clone();
+    private void pathfinder2(GraphVertex source, GraphVertex destination, String path, HashSet<GraphVertex> marked, int step, int cost){
+        HashSet<GraphVertex> marked2 = new HashSet<>(marked);
         markedV.add(source);
         marked2.addAll(markedV);
         step = step + 1;
         LinkedList<Adjacency> li = adjList.get(source.getKey());
         for (Adjacency adj : li){
                 if (adj.getVertex().equals(destination)) {
-                    //String info = mode == 1 ? " | Lenght: "+step : " | Cost: "+(cost+adj.getWeight());
                     cost = cost+adj.getWeight();
                     String[] strarr = {path+" "+adj.getVertex(), String.valueOf(step), String.valueOf(cost)};
                     paths.add(strarr);
                 } else if (paths.size()>0 && Integer.parseInt(paths.get(0)[1])<step){
                     return;
                 } else if (!marked2.contains(adj.getVertex())){
-                   /* for (Adjacency adj2:li) {
-                        marked2.add(adj2.getVertex());
-                    }*/
                     marked2.add(adj.getVertex());
                     pathfinder2(adj.getVertex(), destination, path + " " + adj.getVertex(), marked2, step, cost + adj.getWeight());
                 }
@@ -200,8 +178,8 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
 
     }
     
-    public String findCheapestPath(GraphVertex v, GraphVertex w){
-        //pathfinder2(v,w,v.toString(), new HashSet<>(),0, 0);
+    String findCheapestPath(GraphVertex v, GraphVertex w){
+        runPathfinding(v, w);
         String outputString = "";
         int cost = Integer.MAX_VALUE;
         for(String[] s : paths){
@@ -214,11 +192,19 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
         return outputString;
     }
 
+    String getAllPaths(){
+        StringBuilder outputString = new StringBuilder();
+        for (String[] s : paths){
+            outputString.append(s[0]).append(" | Steps:").append(s[1]).append(" | Cost:").append(s[2]).append("\n");
+        }
+        return outputString.toString();
+    }
+
     public String toString(){
         StringBuilder s = new StringBuilder();
         for (LinkedList<Adjacency> li: adjList
              ) {
-            s.append(adjList.indexOf(li));
+            s.append(adjList.indexOf(li)).append("\t");
             for (Adjacency e : li) {
                 s.append(e.toString());
                 s.append(" ");
@@ -259,9 +245,9 @@ public class WeightedGraph implements Graph <GraphVertex,GraphEdge> {
         boolean equals(Adjacency adj){
             int k1 = getVertex().getKey();
             int k2 = adj.getVertex().getKey();
-            int w1 = getWeight();
-            int w2 = adj.getWeight();
-            return k1 == k2 && w1 == w2;
+            //int w1 = getWeight();
+            //int w2 = adj.getWeight();
+            return k1 == k2;
         }
 
     }

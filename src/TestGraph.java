@@ -1,4 +1,6 @@
-import java.util.HashSet;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 
 public class TestGraph {
 
@@ -42,11 +44,31 @@ public class TestGraph {
         //System.out.println(g.containsEdge(e12)+"\n");
 
         RandomWeightedGraph rg = new RandomWeightedGraph();
-        rg.generateGraph(20,60);
+        rg.generateGraph(1000,5000);
 
-        System.out.println(rg);
+        String str = rg.toString();
 
         System.out.println(rg.printPathOperations());
+
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(new File("graph.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        out.print(str);
+        out.close();
+
+        String str2 = rg.printPaths();
+
+        PrintWriter out2 = null;
+        try {
+            out2 = new PrintWriter(new File("paths.txt"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        out2.print(str2);
+        out2.close();
 
     }
 }
