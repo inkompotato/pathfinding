@@ -1,1 +1,1 @@
-this project is a collaboration between Jan Schelhaas and Felix Lausch
+this project was created by Jan Schelhaas and Felix Lausch
